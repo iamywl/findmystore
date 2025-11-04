@@ -1,3 +1,4 @@
+/* src/index.css (최종 초기화 버전) */
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -22,12 +23,15 @@ a:hover {
   color: #535bf2;
 }
 
+/* 🚨 문제의 원인: body와 #root의 레이아웃 스타일을 제거하여 App.jsx가 제어하도록 함 */
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
+  /* min-width만 남기고 모든 display, height, place-items 속성을 제거합니다. */
   min-width: 320px;
-  min-height: 100vh;
+}
+
+#root {
+  /* 여기는 완전히 비워둡니다. */
 }
 
 h1 {
