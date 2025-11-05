@@ -1,13 +1,10 @@
-# docker-compose.yml (Client ID 직접 주입)
-
+# docker-compose.yml
 version: '3.8'
 
 services:
   findmystore-dev:
     build: 
       context: .
-      # args: VITE_NAVER_MAP_CLIENT_ID_ARG: ${VITE_NAVER_MAP_CLIENT_ID}  <-- 이전 ARG 설정은 제거
-    
     ports:
       - "5173:5173"
     volumes:
@@ -15,9 +12,6 @@ services:
       - /app/node_modules
     restart: always
     
-    # 🚨 이 부분이 핵심: Client ID 환경 변수를 컨테이너 실행 시점에 직접 정의
-    environment:
-      #- VITE_NAVER_MAP_CLIENT_ID=${VITE_NAVER_MAP_CLIENT_ID}
-      - VITE_NAVER_MAP_CLIENT_ID=
-      
-    # env_file: - .env  <-- 이 줄은 제거하거나 주석 처리
+    # 🚨 .env 파일을 로드하여 Client ID를 주입합니다. (보안 유지)
+    env_file:
+      - .env

@@ -1,13 +1,16 @@
-// src/main.jsx (확인)
+// src/main.jsx (라우터 적용)
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App.jsx'; // App 컴포넌트가 올바르게 import 되었는지
+import { BrowserRouter } from 'react-router-dom'; // 🚨 BrowserRouter import
+import App from './App.jsx';
 import './index.css';
 
-// document.getElementById('root')가 null이 아닌지 확인
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <App />
+    {/* 🚨 App 컴포넌트를 BrowserRouter로 감싸줍니다. */}
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </React.StrictMode>,
 );
