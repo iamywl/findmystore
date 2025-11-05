@@ -1,9 +1,11 @@
-// vite.config.js (dotenv 제거 후 표준 Vite 설정 복구)
+// vite.config.js (수정)
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  // define 설정도 필요 없으며, Vite가 env_file에서 VITE_NAVER_MAP_CLIENT_ID를 자동으로 로드합니다.
-})
+  // 🚨 이 줄을 추가하여 정적 자산이 상대 경로("./")로 시작하도록 강제합니다.
+  // Netlify의 MIME/경로 오류를 해결하는 가장 일반적인 방법입니다.
+  base: './', 
+});
