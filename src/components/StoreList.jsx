@@ -1,8 +1,8 @@
 // src/components/StoreList.jsx (오류 수정 및 zustand 통합)
 
 import React from 'react';
-import StoreCard from './StoreCard.jsx'; // 🚨 수정: 확장자 (.jsx) 명시
-import { useStore } from '../store/store'; // Zustand store import
+import StoreCard from './storeCard.jsx'; 
+import { useStore } from '../store/store';
 
 const StoreList = () => {
   // 전역 상태에서 필터링된 매물 목록을 가져옵니다.
