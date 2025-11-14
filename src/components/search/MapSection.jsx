@@ -2,36 +2,41 @@
 
 import React from 'react';
 import CompareModal from './CompareModal'; 
-import NaverMapLoader from './NaverMapLoader'; // 🚨 지도 로더 컴포넌트 import
+import NaverMapLoader from './NaverMapLoader'; 
 
 // 지도 및 목록 전체 레이아웃
 const mapLayoutStyle = {
   display: 'flex',
   height: '75vh', 
-  gap: '20px',
-  maxWidth: '1200px',
-  margin: '0 auto 20px auto',
+  gap: '15px', 
+  // 🚨 수정: 부모의 padding 내부에 머물도록 margin을 제거하고 auto로 설정
+  margin: '0 auto 20px auto', 
   position: 'relative', 
 };
 
-// 지도 영역 스타일
+// 매물 목록 영역 스타일 (좌측)
+const listingAreaStyle = { 
+  flex: 1, // 🚨 수정: 유동적으로 공간을 1 비율로 나눕니다.
+  minWidth: '300px', // 🚨 추가: 화면이 좁아져도 최소한의 너비를 확보합니다.
+  flexShrink: 0, 
+  backgroundColor: 'white',
+  borderRadius: '12px',
+  padding: '10px 20px', // 좌우 패딩을 20px로 통일
+  overflowY: 'auto', 
+  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+  height: '100%', 
+};
+
+// 지도 영역 스타일 (우측)
 const mapAreaStyle = {
-  flex: 2, 
+  flex: 2, // 🚨 수정: 유동적으로 공간을 2 비율로 나눕니다. (지도 : 목록 = 2 : 1)
+  minWidth: '400px', // 🚨 추가: 지도도 최소한의 너비를 확보합니다.
   backgroundColor: '#f5f5f5', 
   borderRadius: '12px',
   position: 'relative', 
   boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-  minHeight: '400px', 
-};
-
-// 매물 목록 영역 스타일
-const listingAreaStyle = { 
-  flex: 1, 
-  backgroundColor: 'white',
-  borderRadius: '12px',
-  padding: '10px',
-  overflowY: 'auto', 
-  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+  height: '100%',
+  // 🚨 수정: 우측 정렬을 위해 margin을 제거하고 flex-grow에 의존합니다.
 };
 
 // 토글 버튼 및 카드 스타일 (이전과 동일)
@@ -109,12 +114,26 @@ const MapSection = ({ listings, facilityToggles, onFacilityToggle, onCompareTogg
 
   const handleMapBoundsChange = (bounds) => {
     // 지도 경계 변경 동기화 로직 (여기서 API 호출을 수행해야 함)
-    console.log("지도 경계 변경. 새로운 매물 검색 시작:", bounds);
+    // console.log("지도 경계 변경. 새로운 매물 검색 시작:", bounds);
   };
 
   return (
     <div style={mapLayoutStyle}>
-      {/* 1. 지도 영역 (NaverMapLoader 삽입) */}
+      {/* 1. 매물 목록 영역 (좌측) */}
+      <div style={listingAreaStyle}>
+        <h3 style={{ marginTop: '0', borderBottom: '2px solid #eee', paddingBottom: '10px' }}>
+          최신 등록 매물 ({listings.length}건)
+        </h3>
+        {listings.map(listing => (
+          <ListingCard 
+            key={listing.id} 
+            listing={listing} 
+            onCompareToggle={onCompareToggle}
+          />
+        ))}
+      </div>
+
+      {/* 2. 지도 영역 (우측) */}
       <div style={mapAreaStyle}>
         
         {/* 주변 시설 토글 바 */}
@@ -130,27 +149,13 @@ const MapSection = ({ listings, facilityToggles, onFacilityToggle, onCompareTogg
           ))}
         </div>
 
-        {/* 🚨 네이버 지도 로더 컴포넌트 삽입 */}
+        {/* 네이버 지도 로더 컴포넌트 삽입 */}
         <NaverMapLoader 
           listings={listings} 
           facilityToggles={facilityToggles}
           onMapBoundsChange={handleMapBoundsChange}
         />
         
-      </div>
-
-      {/* 2. 매물 목록 영역 */}
-      <div style={listingAreaStyle}>
-        <h3 style={{ marginTop: '0', borderBottom: '2px solid #eee', paddingBottom: '10px' }}>
-          최신 등록 매물 ({listings.length}건)
-        </h3>
-        {listings.map(listing => (
-          <ListingCard 
-            key={listing.id} 
-            listing={listing} 
-            onCompareToggle={onCompareToggle}
-          />
-        ))}
       </div>
 
       {/* 3. 매물 비교 모달 */}

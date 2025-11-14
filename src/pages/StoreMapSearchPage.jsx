@@ -3,15 +3,11 @@
 import React, { useState } from 'react';
 import FilterBar from '../components/search/FilterBar';
 import MapSection from '../components/search/MapSection';
-import initialMockListings from '../data/mockListings'; // 🚨 변경: 더미 데이터 import
+import initialMockListings from '../data/mockListings'; 
 
 const StoreMapSearchPage = () => {
-  // 🚨 변경: import한 더미 데이터 사용
   const [listings, setListings] = useState(initialMockListings); 
-  const [filters, setFilters] = useState({
-    // ... (기존 필터 상태는 그대로 유지)
-  });
-  
+  const [filters, setFilters] = useState({ /* ... 필터 상태 ... */ }); 
   const [facilityToggles, setFacilityToggles] = useState({
     subway: false,
     school: false,
@@ -30,7 +26,6 @@ const StoreMapSearchPage = () => {
       ...prev,
       [facilityName]: !prev[facilityName],
     }));
-    console.log(`${facilityName} 토글 상태 변경: ${!facilityToggles[facilityName]}`);
   };
 
   const handleCompareToggle = (id) => {
@@ -45,9 +40,13 @@ const StoreMapSearchPage = () => {
 
 
   return (
-    <div style={{ padding: '0 20px', backgroundColor: '#f9f9f9', flexGrow: 1 }}>
+    // 🚨 수정: 좌우 패딩만 유지하고 화면 전체 너비를 사용합니다.
+    <div style={{ padding: '0 20px', backgroundColor: '#f9f9f9', flexGrow: 1 }}> 
+      
       {/* 검색 입력창 및 필터 바 섹션 */}
-      <div style={{ maxWidth: '1200px', margin: '0 auto', paddingTop: '20px' }}>
+      <div style={{ margin: '0 auto', paddingTop: '20px' }}> 
+        
+        {/* 검색 입력창 */}
         <div style={{ 
             display: 'flex', 
             justifyContent: 'center', 
@@ -66,9 +65,11 @@ const StoreMapSearchPage = () => {
             <button style={{ background: 'none', border: 'none', cursor: 'pointer', marginLeft: '10px' }}>🔍</button>
         </div>
 
-        <FilterBar filters={{ /* ... */ }} onFilterChange={handleFilterChange} />
+        {/* 필터 바 컴포넌트 */}
+        <FilterBar filters={filters} onFilterChange={handleFilterChange} />
       </div>
 
+      {/* 지도 및 매물 목록 섹션 */}
       <MapSection 
         listings={listings} 
         facilityToggles={facilityToggles} 

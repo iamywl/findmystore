@@ -1,51 +1,48 @@
 // src/data/mockListings.js
+// 🚨 매물 개수를 상수로 관리하며, 1000개의 더미 데이터를 생성합니다.
 
-const mockListings = [
-  { 
-    id: 1, 
-    type: '외식업', 
-    area: '10평대', 
-    price: '보증금 5,000 / 월세 320', 
-    managementFee: '15만 원', 
-    parking: '2대', 
-    compared: false 
-  },
-  { 
-    id: 2, 
-    type: '서비스업', 
-    area: '20평대', 
-    price: '보증금 3,000 / 월세 190', 
-    managementFee: '17만 원', 
-    parking: '3대', 
-    compared: false 
-  },
-  { 
-    id: 3, 
-    type: '교육/학원업', 
-    area: '30평대', 
-    price: '보증금 1,000 / 월세 100', 
-    managementFee: '8만 원', 
-    parking: '1대', 
-    compared: false 
-  },
-  { 
-    id: 4, 
-    type: '도/소매업', 
-    area: '40평대', 
-    price: '보증금 8,000 / 월세 400', 
-    managementFee: '25만 원', 
-    parking: '5대', 
-    compared: false 
-  },
-  { 
-    id: 5, 
-    type: '숙박업', 
-    area: '50평 이상', 
-    price: '보증금 1억 / 월세 500', 
-    managementFee: '30만 원', 
-    parking: '10대', 
-    compared: false 
-  },
-];
+// 🚨 매물 개수를 임의로 변경할 수 있는 상수입니다.
+const NUMBER_OF_LISTINGS = 1000; 
+
+const baseLat = 37.5665; // 서울 시청 위도
+const baseLng = 126.9780; // 서울 시청 경도
+
+const getMockListing = (id) => {
+    // 좌표를 서울 중심가 주변 넓은 영역(약 20km 반경)에 무작위로 분산
+    // Math.random() - 0.5: -0.5 ~ 0.5 사이의 값
+    const latOffset = (Math.random() - 0.5) * 0.2; 
+    const lngOffset = (Math.random() - 0.5) * 0.4;
+
+    const lat = baseLat + latOffset;
+    const lng = baseLng + lngOffset;
+
+    const types = ['외식업', '서비스업', '도/소매업', '교육/학원업', '숙박업', '기타'];
+    const areas = ['10평 이하', '10평대', '20평대', '30평대', '40평대', '50평 이상'];
+
+    const type = types[id % types.length];
+    const area = areas[id % areas.length];
+    
+    // 금액을 ID에 따라 다르게 설정
+    const depositBase = (id % 15) * 500 + 500; // 500만원 ~ 7500만원
+    const rentBase = (id % 7) * 40 + 80; // 80만원 ~ 360만원
+    const managementFeeBase = (id % 12) * 2 + 3; // 3만원 ~ 27만원
+
+    return { 
+        id: id, 
+        type: type, 
+        area: area, 
+        price: `보증금 ${depositBase.toLocaleString()} / 월세 ${rentBase.toLocaleString()}`, 
+        managementFee: `${managementFeeBase}만 원`, 
+        parking: `${(id % 5) + 1}대`, 
+        compared: false, 
+        lat: lat, 
+        lng: lng 
+    };
+};
+
+const mockListings = [];
+for (let i = 1; i <= NUMBER_OF_LISTINGS; i++) {
+    mockListings.push(getMockListing(i));
+}
 
 export default mockListings;

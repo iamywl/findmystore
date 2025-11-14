@@ -5,21 +5,29 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Find My Store</title>
-    <script>
-      // Vite 환경 변수에서 Client ID를 가져옵니다.
-      const clientId = document.querySelector('#root').dataset.naverClientId;
-      
-      if (clientId) {
-        const script = document.createElement('script');
-        // 클라이언트 ID를 URL에 포함하여 스크립트 로드
-        script.src = `https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${clientId}`;
-        script.async = true;
-        document.head.appendChild(script);
-      }
+    
+    <script type="module">
+        // VITE 환경 변수에서 Client ID를 가져옵니다.
+        const clientId = import.meta.env.VITE_NAVER_MAP_CLIENT_ID;
+        
+        if (clientId) {
+            const script = document.createElement('script');
+            // 🚨 핵심 수정: ncpClientId 대신 ncpKeyId 사용
+            script.src = `https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${clientId}`;
+            script.async = true;
+            document.head.appendChild(script);
+        } else {
+            console.error('🚨 네이버 지도 Client ID가 없습니다. .env 파일을 확인해주세요.');
+        }
+        
+        // 🚨 인증 실패 콜백 함수 추가 (문서 권장 사항)
+        window.navermap_authFailure = function () {
+            console.error("NAVER Maps API 인증에 실패했습니다. Client ID (ncpKeyId)를 확인해 주세요.");
+        }
     </script>
   </head>
   <body>
-    <div id="root" data-naver-client-id="%VITE_NAVER_MAP_CLIENT_ID%"></div>
+    <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
