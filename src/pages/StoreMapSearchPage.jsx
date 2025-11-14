@@ -1,47 +1,84 @@
 // src/pages/StoreMapSearchPage.jsx
 
-import React from 'react';
-
-// 지도 및 목록 컴포넌트는 Lazy Loading을 사용합니다.
-const MapContainer = React.lazy(() => import('../components/MapContainer.jsx')); 
-const StoreList = React.lazy(() => import('../components/StoreList.jsx')); 
+import React, { useState } from 'react';
+import FilterBar from '../components/search/FilterBar';
+import MapSection from '../components/search/MapSection';
+import initialMockListings from '../data/mockListings'; // 🚨 변경: 더미 데이터 import
 
 const StoreMapSearchPage = () => {
-    return (
-        <div style={{ display: 'flex', height: 'calc(100vh - 70px)', width: '100%', margin: 0, padding: 0 }}>
-            {/* 1. 왼쪽: 매물 검색 필터 및 목록 영역 */}
-            <div 
-                style={{ 
-                    flex: '0 0 400px', 
-                    overflowY: 'auto', 
-                    borderRight: '1px solid #ccc',
-                    backgroundColor: '#f9f9f9',
-                    color: '#213547' 
-                }}
-            >
-                <div style={{ padding: '20px', borderBottom: '1px solid #ccc', backgroundColor: '#fff' }}>
-                    {/* 검색창 영역 */}
-                    <input 
-                        type="text" 
-                        placeholder="지역, 상호명을 입력해 주세요." 
-                        style={{ width: 'calc(100% - 20px)', padding: '10px', border: '1px solid #ccc', borderRadius: '4px' }}
-                    />
-                </div>
-                {/* 🚨 StoreList 컴포넌트 렌더링 */}
-                <React.Suspense fallback={<div>목록 로딩 중...</div>}>
-                    <StoreList />
-                </React.Suspense>
-            </div>
-            
-            {/* 2. 오른쪽: 지도 영역 */}
-            <div style={{ flex: 1 }}>
-                {/* 🚨 MapContainer 컴포넌트 렌더링 */}
-                <React.Suspense fallback={<div>지도 로딩 중...</div>}>
-                    <MapContainer /> 
-                </React.Suspense>
-            </div>
-        </div>
+  // 🚨 변경: import한 더미 데이터 사용
+  const [listings, setListings] = useState(initialMockListings); 
+  const [filters, setFilters] = useState({
+    // ... (기존 필터 상태는 그대로 유지)
+  });
+  
+  const [facilityToggles, setFacilityToggles] = useState({
+    subway: false,
+    school: false,
+    hospital: false,
+  });
+
+  const handleFilterChange = (filterName, value) => {
+    setFilters(prev => ({
+      ...prev,
+      [filterName]: value,
+    }));
+  };
+
+  const handleFacilityToggle = (facilityName) => {
+    setFacilityToggles(prev => ({
+      ...prev,
+      [facilityName]: !prev[facilityName],
+    }));
+    console.log(`${facilityName} 토글 상태 변경: ${!facilityToggles[facilityName]}`);
+  };
+
+  const handleCompareToggle = (id) => {
+    setListings(prev => 
+      prev.map(item => 
+        item.id === id ? { ...item, compared: !item.compared } : item
+      )
     );
+  };
+  
+  const comparedListings = listings.filter(item => item.compared);
+
+
+  return (
+    <div style={{ padding: '0 20px', backgroundColor: '#f9f9f9', flexGrow: 1 }}>
+      {/* 검색 입력창 및 필터 바 섹션 */}
+      <div style={{ maxWidth: '1200px', margin: '0 auto', paddingTop: '20px' }}>
+        <div style={{ 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            marginBottom: '20px',
+            border: '1px solid #ddd', 
+            borderRadius: '8px', 
+            padding: '10px 15px',
+            backgroundColor: 'white'
+        }}>
+            <input 
+                type="text" 
+                placeholder="지역, 상호명을 입력해주세요" 
+                style={{ flexGrow: 1, border: 'none', outline: 'none', fontSize: '16px' }} 
+            />
+            <button style={{ background: 'none', border: 'none', cursor: 'pointer', marginLeft: '10px' }}>🔍</button>
+        </div>
+
+        <FilterBar filters={{ /* ... */ }} onFilterChange={handleFilterChange} />
+      </div>
+
+      <MapSection 
+        listings={listings} 
+        facilityToggles={facilityToggles} 
+        onFacilityToggle={handleFacilityToggle}
+        onCompareToggle={handleCompareToggle}
+        comparedListings={comparedListings}
+      />
+      
+    </div>
+  );
 };
 
 export default StoreMapSearchPage;
