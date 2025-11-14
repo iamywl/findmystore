@@ -1,7 +1,8 @@
-// src/components/search/MapSection.jsx
+// src/components/search/MapSection.jsx (네이버 지도 연동 전의 안전한 상태로 복구)
 
 import React from 'react';
-import CompareModal from './CompareModal'; // 🚨 새로운 컴포넌트 import
+import CompareModal from './CompareModal'; 
+// import NaverMap from './NaverMap'; // 🚨 지도 연동 코드를 임시로 제거하고 안전하게 복구합니다.
 
 // 지도 및 목록 전체 레이아웃
 const mapLayoutStyle = {
@@ -10,20 +11,20 @@ const mapLayoutStyle = {
   gap: '20px',
   maxWidth: '1200px',
   margin: '0 auto 20px auto',
-  position: 'relative', // 비교 모달 위치 지정을 위해 추가
+  position: 'relative', 
 };
 
-// 지도 영역 스타일
+// 지도 영역 스타일 (회색 박스로 복구)
 const mapAreaStyle = {
   flex: 2, 
-  backgroundColor: '#e0e0e0', 
+  backgroundColor: '#e0e0e0', // 회색 박스로 복구
   borderRadius: '12px',
-  position: 'relative', // 토글 버튼 위치 지정을 위해 추가
+  position: 'relative', 
   boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
 };
 
-// 매물 목록 영역 스타일
-const listingAreaStyle = {
+// ... (나머지 스타일은 동일) ...
+const listingAreaStyle = { 
   flex: 1, 
   backgroundColor: 'white',
   borderRadius: '12px',
@@ -92,7 +93,8 @@ const ListingCard = ({ listing, onCompareToggle }) => {
           fontSize: '12px',
           padding: '5px 8px',
         }}
-        disabled={!isCompared && onCompareToggle.length >= 3} // 최대 3개까지만 비교 가능하게 설정
+        // 비교는 최대 3개까지만 가능하다고 가정합니다.
+        disabled={!isCompared && window.currentComparedCount >= 3} 
       >
         {compareCount}
       </button>
@@ -106,10 +108,14 @@ const MapSection = ({ listings, facilityToggles, onFacilityToggle, onCompareTogg
     { name: 'school', label: '🏫 학교' },
     { name: 'hospital', label: '🏥 병원' },
   ];
+  
+  // 임시로 비교 개수를 전역 변수로 설정하여 비교 버튼 disabled 상태를 제어합니다.
+  window.currentComparedCount = comparedListings.length;
+
 
   return (
     <div style={mapLayoutStyle}>
-      {/* 1. 지도 영역 */}
+      {/* 1. 지도 영역 (회색 박스) */}
       <div style={mapAreaStyle}>
         
         {/* 주변 시설 토글 바 */}
@@ -125,17 +131,18 @@ const MapSection = ({ listings, facilityToggles, onFacilityToggle, onCompareTogg
           ))}
         </div>
 
-        {/* 지도 표시 */}
+        {/* 🚨 지도 대신 회색 박스 내용 표시 (원래 작동하던 지도 코드를 다시 삽입해야 합니다) */}
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' }}>
           
-          <p>지도 API 및 주변 시설 마커가 여기에 표시됩니다.</p>
+          <p>여기에 원래 구현하셨던 **네이버 지도 컴포넌트**가 위치해야 합니다.</p>
         </div>
+        
       </div>
 
       {/* 2. 매물 목록 영역 */}
       <div style={listingAreaStyle}>
         <h3 style={{ marginTop: '0', borderBottom: '2px solid #eee', paddingBottom: '10px' }}>
-          매물 {listings.length}개
+          최신 등록 매물 ({listings.length}건)
         </h3>
         {listings.map(listing => (
           <ListingCard 
@@ -146,11 +153,11 @@ const MapSection = ({ listings, facilityToggles, onFacilityToggle, onCompareTogg
         ))}
       </div>
 
-      {/* 3. 매물 비교 모달 (최소 2개 이상 선택 시) */}
+      {/* 3. 매물 비교 모달 */}
       {comparedListings.length >= 2 && (
         <CompareModal 
           listings={comparedListings} 
-          onClose={() => { /* 모달 닫기 로직 구현 */ }}
+          onClose={() => { /* ... */ }}
         />
       )}
     </div>
