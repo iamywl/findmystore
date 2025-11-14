@@ -1,8 +1,8 @@
-// src/components/search/MapSection.jsx (네이버 지도 연동 전의 안전한 상태로 복구)
+// src/components/search/MapSection.jsx
 
 import React from 'react';
 import CompareModal from './CompareModal'; 
-// import NaverMap from './NaverMap'; // 🚨 지도 연동 코드를 임시로 제거하고 안전하게 복구합니다.
+import NaverMapLoader from './NaverMapLoader'; // 🚨 지도 로더 컴포넌트 import
 
 // 지도 및 목록 전체 레이아웃
 const mapLayoutStyle = {
@@ -14,16 +14,17 @@ const mapLayoutStyle = {
   position: 'relative', 
 };
 
-// 지도 영역 스타일 (회색 박스로 복구)
+// 지도 영역 스타일
 const mapAreaStyle = {
   flex: 2, 
-  backgroundColor: '#e0e0e0', // 회색 박스로 복구
+  backgroundColor: '#f5f5f5', 
   borderRadius: '12px',
   position: 'relative', 
   boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+  minHeight: '400px', 
 };
 
-// ... (나머지 스타일은 동일) ...
+// 매물 목록 영역 스타일
 const listingAreaStyle = { 
   flex: 1, 
   backgroundColor: 'white',
@@ -33,19 +34,7 @@ const listingAreaStyle = {
   boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
 };
 
-// 개별 매물 카드 스타일
-const listingCardStyle = (compared) => ({
-  border: compared ? '2px solid #646cff' : '1px solid #ddd',
-  backgroundColor: compared ? '#f0f0ff' : 'white',
-  borderRadius: '8px',
-  padding: '15px',
-  marginBottom: '10px',
-  cursor: 'pointer',
-  transition: 'all 0.2s',
-  position: 'relative',
-});
-
-// 주변 시설 토글 바 스타일
+// 토글 버튼 및 카드 스타일 (이전과 동일)
 const toggleBarStyle = {
   position: 'absolute',
   top: '10px',
@@ -58,8 +47,6 @@ const toggleBarStyle = {
   display: 'flex',
   gap: '5px',
 };
-
-// 토글 버튼 스타일
 const toggleButtonStyle = (isActive) => ({
     padding: '8px 12px',
     border: 'none',
@@ -70,11 +57,21 @@ const toggleButtonStyle = (isActive) => ({
     fontWeight: 'bold',
     transition: 'background-color 0.2s',
 });
+const listingCardStyle = (compared) => ({
+  border: compared ? '2px solid #646cff' : '1px solid #ddd',
+  backgroundColor: compared ? '#f0f0ff' : 'white',
+  borderRadius: '8px',
+  padding: '15px',
+  marginBottom: '10px',
+  cursor: 'pointer',
+  transition: 'all 0.2s',
+  position: 'relative',
+});
 
 
 const ListingCard = ({ listing, onCompareToggle }) => {
   const isCompared = listing.compared;
-  const compareCount = listing.compared ? '✅ 비교 중' : '비교하기';
+  const compareCount = isCompared ? '✅ 비교 중' : '비교하기';
 
   return (
     <div style={listingCardStyle(isCompared)}>
@@ -93,7 +90,6 @@ const ListingCard = ({ listing, onCompareToggle }) => {
           fontSize: '12px',
           padding: '5px 8px',
         }}
-        // 비교는 최대 3개까지만 가능하다고 가정합니다.
         disabled={!isCompared && window.currentComparedCount >= 3} 
       >
         {compareCount}
@@ -109,13 +105,16 @@ const MapSection = ({ listings, facilityToggles, onFacilityToggle, onCompareTogg
     { name: 'hospital', label: '🏥 병원' },
   ];
   
-  // 임시로 비교 개수를 전역 변수로 설정하여 비교 버튼 disabled 상태를 제어합니다.
   window.currentComparedCount = comparedListings.length;
 
+  const handleMapBoundsChange = (bounds) => {
+    // 지도 경계 변경 동기화 로직 (여기서 API 호출을 수행해야 함)
+    console.log("지도 경계 변경. 새로운 매물 검색 시작:", bounds);
+  };
 
   return (
     <div style={mapLayoutStyle}>
-      {/* 1. 지도 영역 (회색 박스) */}
+      {/* 1. 지도 영역 (NaverMapLoader 삽입) */}
       <div style={mapAreaStyle}>
         
         {/* 주변 시설 토글 바 */}
@@ -131,11 +130,12 @@ const MapSection = ({ listings, facilityToggles, onFacilityToggle, onCompareTogg
           ))}
         </div>
 
-        {/* 🚨 지도 대신 회색 박스 내용 표시 (원래 작동하던 지도 코드를 다시 삽입해야 합니다) */}
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' }}>
-          
-          <p>여기에 원래 구현하셨던 **네이버 지도 컴포넌트**가 위치해야 합니다.</p>
-        </div>
+        {/* 🚨 네이버 지도 로더 컴포넌트 삽입 */}
+        <NaverMapLoader 
+          listings={listings} 
+          facilityToggles={facilityToggles}
+          onMapBoundsChange={handleMapBoundsChange}
+        />
         
       </div>
 

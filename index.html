@@ -1,8 +1,25 @@
-<head>
-    <title>findmystore</title>
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Find My Store</title>
+    <script>
+      // Vite 환경 변수에서 Client ID를 가져옵니다.
+      const clientId = document.querySelector('#root').dataset.naverClientId;
+      
+      if (clientId) {
+        const script = document.createElement('script');
+        // 클라이언트 ID를 URL에 포함하여 스크립트 로드
+        script.src = `https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${clientId}`;
+        script.async = true;
+        document.head.appendChild(script);
+      }
+    </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root" data-naver-client-id="%VITE_NAVER_MAP_CLIENT_ID%"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
