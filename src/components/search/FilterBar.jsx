@@ -9,9 +9,10 @@ import {
   FLOOR_OPTIONS, 
   AREA_OPTIONS, 
   PARKING_OPTIONS 
-} from '../../data/filterOptions'; // 🚨 데이터 파일에서 옵션들을 가져옵니다.
+} from '../../data/filterOptions'; 
 
 const FilterBar = ({ filters, onFilterChange }) => {
+  // 현재 열린 드롭다운 이름
   const [activeFilter, setActiveFilter] = useState(null);
 
   const handleButtonClick = (filterName) => {
@@ -20,58 +21,67 @@ const FilterBar = ({ filters, onFilterChange }) => {
 
   const handleDropdownSelect = (filterName, value) => {
     onFilterChange(filterName, value);
-    // 선택 후 드롭다운 닫기
-    setActiveFilter(null); 
+    // 선택 후 드롭다운 닫기 (선택 방식에 따라 닫지 않을 수도 있음)
+    // setActiveFilter(null); 
   };
   
   const handleReset = () => {
-    // 모든 필터 초기화 로직 (StoreMapSearchPage에서 처리할 수도 있습니다)
-    window.location.reload(); // 간단히 페이지 새로고침
+    window.location.reload(); 
   };
+  
+  // 🚨 활성화 상태 계산: filters 객체에 값이 있으면 true
+  const isFilterActive = (name) => {
+    const value = filters[name];
+    if (typeof value === 'boolean') return value;
+    if (Array.isArray(value)) return value.length > 0;
+    if (typeof value === 'object' && value !== null) return Object.keys(value).length > 0;
+    return !!value;
+  };
+
 
   return (
     <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', position: 'relative', zIndex: 10 }}>
       {/* 1. 업종 필터 */}
       <FilterButton 
         name="업종" 
-        isActive={activeFilter === '업종'} 
+        isActive={activeFilter === '업종' || isFilterActive('업종')} 
         onClick={() => handleButtonClick('업종')} 
       />
-      {/* 2. 매출증빙 (토글 버튼이나 간단한 체크박스 형태로 가정) */}
+      {/* 2. 매출증빙 (토글 버튼) */}
       <FilterButton 
         name="매출증빙" 
-        isActive={filters.매출증빙} 
+        isActive={filters.매출증빙} // boolean 값으로 바로 확인
         onClick={() => onFilterChange('매출증빙', !filters.매출증빙)}
         isToggle={true}
       />
       {/* 3. 테마 필터 */}
       <FilterButton 
         name="테마" 
-        isActive={activeFilter === '테마'} 
+        isActive={activeFilter === '테마' || isFilterActive('테마')} 
         onClick={() => handleButtonClick('테마')} 
       />
       {/* 4. 금액 필터 */}
       <FilterButton 
         name="금액" 
-        isActive={activeFilter === '금액'} 
+        isActive={activeFilter === '금액' || isFilterActive('금액')} 
         onClick={() => handleButtonClick('금액')} 
       />
       {/* 5. 층수 필터 */}
       <FilterButton 
         name="층수" 
-        isActive={activeFilter === '층수'} 
+        isActive={activeFilter === '층수' || isFilterActive('층수')} 
         onClick={() => handleButtonClick('층수')} 
       />
       {/* 6. 면적 필터 */}
       <FilterButton 
         name="면적" 
-        isActive={activeFilter === '면적'} 
+        isActive={activeFilter === '면적' || isFilterActive('면적')} 
         onClick={() => handleButtonClick('면적')} 
       />
       {/* 7. 주차대수 필터 */}
       <FilterButton 
         name="주차대수" 
-        isActive={activeFilter === '주차대수'} 
+        isActive={activeFilter === '주차대수' || isFilterActive('주차대수')} 
         onClick={() => handleButtonClick('주차대수')} 
       />
 
@@ -100,6 +110,7 @@ const FilterBar = ({ filters, onFilterChange }) => {
             filterName="업종" 
             options={INDUSTRY_OPTIONS} 
             onSelect={handleDropdownSelect} 
+            currentSelection={filters.업종}
             type="icon-grid"
           />
         )}
@@ -108,6 +119,7 @@ const FilterBar = ({ filters, onFilterChange }) => {
             filterName="테마" 
             options={THEME_OPTIONS} 
             onSelect={handleDropdownSelect} 
+            currentSelection={filters.테마}
             type="simple-grid"
           />
         )}
@@ -115,6 +127,7 @@ const FilterBar = ({ filters, onFilterChange }) => {
           <FilterDropdown 
             filterName="금액" 
             onSelect={handleDropdownSelect} 
+            currentSelection={filters.금액}
             type="slider-range"
           />
         )}
@@ -123,6 +136,7 @@ const FilterBar = ({ filters, onFilterChange }) => {
             filterName="층수" 
             options={FLOOR_OPTIONS} 
             onSelect={handleDropdownSelect} 
+            currentSelection={filters.층수}
             type="chip-select"
           />
         )}
@@ -131,6 +145,7 @@ const FilterBar = ({ filters, onFilterChange }) => {
             filterName="면적" 
             options={AREA_OPTIONS} 
             onSelect={handleDropdownSelect} 
+            currentSelection={filters.면적}
             type="chip-select"
           />
         )}
@@ -139,6 +154,7 @@ const FilterBar = ({ filters, onFilterChange }) => {
             filterName="주차대수" 
             options={PARKING_OPTIONS} 
             onSelect={handleDropdownSelect} 
+            currentSelection={filters.주차대수}
             type="chip-select"
           />
         )}

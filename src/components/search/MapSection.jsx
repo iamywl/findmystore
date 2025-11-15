@@ -9,34 +9,33 @@ const mapLayoutStyle = {
   display: 'flex',
   height: '75vh', 
   gap: '15px', 
-  // 🚨 수정: 부모의 padding 내부에 머물도록 margin을 제거하고 auto로 설정
   margin: '0 auto 20px auto', 
   position: 'relative', 
 };
 
 // 매물 목록 영역 스타일 (좌측)
 const listingAreaStyle = { 
-  flex: 1, // 🚨 수정: 유동적으로 공간을 1 비율로 나눕니다.
-  minWidth: '300px', // 🚨 추가: 화면이 좁아져도 최소한의 너비를 확보합니다.
+  flex: 1, 
+  minWidth: '300px', 
   flexShrink: 0, 
   backgroundColor: 'white',
   borderRadius: '12px',
-  padding: '10px 20px', // 좌우 패딩을 20px로 통일
+  padding: '10px 20px', 
   overflowY: 'auto', 
   boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
   height: '100%', 
+  color: '#333', // 🚨 수정: 목록 영역 글자색 지정
 };
 
 // 지도 영역 스타일 (우측)
 const mapAreaStyle = {
-  flex: 2, // 🚨 수정: 유동적으로 공간을 2 비율로 나눕니다. (지도 : 목록 = 2 : 1)
-  minWidth: '400px', // 🚨 추가: 지도도 최소한의 너비를 확보합니다.
+  flex: 2, 
+  minWidth: '400px', 
   backgroundColor: '#f5f5f5', 
   borderRadius: '12px',
   position: 'relative', 
   boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
   height: '100%',
-  // 🚨 수정: 우측 정렬을 위해 margin을 제거하고 flex-grow에 의존합니다.
 };
 
 // 토글 버튼 및 카드 스타일 (이전과 동일)
@@ -71,6 +70,7 @@ const listingCardStyle = (compared) => ({
   cursor: 'pointer',
   transition: 'all 0.2s',
   position: 'relative',
+  color: '#333', // 🚨 수정: 매물 카드 내부 글자색 지정
 });
 
 
@@ -121,7 +121,7 @@ const MapSection = ({ listings, facilityToggles, onFacilityToggle, onCompareTogg
     <div style={mapLayoutStyle}>
       {/* 1. 매물 목록 영역 (좌측) */}
       <div style={listingAreaStyle}>
-        <h3 style={{ marginTop: '0', borderBottom: '2px solid #eee', paddingBottom: '10px' }}>
+        <h3 style={{ marginTop: '0', borderBottom: '2px solid #eee', paddingBottom: '10px', color: '#333' }}>
           최신 등록 매물 ({listings.length}건)
         </h3>
         {listings.map(listing => (

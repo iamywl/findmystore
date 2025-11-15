@@ -8,8 +8,7 @@ const baseLat = 37.5665; // 서울 시청 위도
 const baseLng = 126.9780; // 서울 시청 경도
 
 const getMockListing = (id) => {
-    // 좌표를 서울 중심가 주변 넓은 영역(약 20km 반경)에 무작위로 분산
-    // Math.random() - 0.5: -0.5 ~ 0.5 사이의 값
+    // 좌표를 서울 중심가 주변 넓은 영역에 무작위로 분산
     const latOffset = (Math.random() - 0.5) * 0.2; 
     const lngOffset = (Math.random() - 0.5) * 0.4;
 
@@ -23,9 +22,9 @@ const getMockListing = (id) => {
     const area = areas[id % areas.length];
     
     // 금액을 ID에 따라 다르게 설정
-    const depositBase = (id % 15) * 500 + 500; // 500만원 ~ 7500만원
-    const rentBase = (id % 7) * 40 + 80; // 80만원 ~ 360만원
-    const managementFeeBase = (id % 12) * 2 + 3; // 3만원 ~ 27만원
+    const depositBase = (id % 15) * 500 + 500; 
+    const rentBase = (id % 7) * 40 + 80; 
+    const managementFeeBase = (id % 12) * 2 + 3; 
 
     return { 
         id: id, 
