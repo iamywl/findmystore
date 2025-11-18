@@ -24,7 +24,7 @@ const Header = () => {
         }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
                 <Link to="/" style={{ textDecoration: 'none', color: '#333', fontSize: '20px', fontWeight: 'bold' }}>
-                    아싸 점포 거래소
+                홍한규 점포거래소
                 </Link>
                 <nav style={{ display: 'flex', gap: '10px' }}>
                     <Link to="/search" style={navLinkStyle}>점포 찾기</Link>
