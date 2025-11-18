@@ -11,7 +11,7 @@ export const INDUSTRY_OPTIONS = [
     { name: '기타', icon: '···' },
 ];
 
-// 이미지 9를 참고한 테마 옵션
+// 테마 옵션
 export const THEME_OPTIONS = [
     '무권리', 
     '급매', 
@@ -21,7 +21,7 @@ export const THEME_OPTIONS = [
     '임대인 매물'
 ];
 
-// 이미지 8을 참고한 층수 옵션
+// 층수 옵션
 export const FLOOR_OPTIONS = [
     '지하층', 
     '1층', 
@@ -29,7 +29,7 @@ export const FLOOR_OPTIONS = [
     '3층이상'
 ];
 
-// 이미지 7을 참고한 면적 옵션 (평당)
+// 면적 옵션 (평당)
 export const AREA_OPTIONS = [
     '10평 이하', 
     '10평대', 
@@ -39,7 +39,7 @@ export const AREA_OPTIONS = [
     '50평 이상'
 ];
 
-// 이미지 1을 참고한 주차대수 옵션
+// 주차대수 옵션
 export const PARKING_OPTIONS = [
     '1대', 
     '2~3대', 

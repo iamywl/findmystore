@@ -24,7 +24,7 @@ const listingAreaStyle = {
   overflowY: 'auto', 
   boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
   height: '100%', 
-  color: '#333', // 🚨 수정: 목록 영역 글자색 지정
+  color: '#333', 
 };
 
 // 지도 영역 스타일 (우측)
@@ -38,7 +38,7 @@ const mapAreaStyle = {
   height: '100%',
 };
 
-// 토글 버튼 및 카드 스타일 (이전과 동일)
+// 토글 버튼 및 카드 스타일
 const toggleBarStyle = {
   position: 'absolute',
   top: '10px',
@@ -70,7 +70,7 @@ const listingCardStyle = (compared) => ({
   cursor: 'pointer',
   transition: 'all 0.2s',
   position: 'relative',
-  color: '#333', // 🚨 수정: 매물 카드 내부 글자색 지정
+  color: '#333', 
 });
 
 
@@ -103,7 +103,8 @@ const ListingCard = ({ listing, onCompareToggle }) => {
   );
 };
 
-const MapSection = ({ listings, facilityToggles, onFacilityToggle, onCompareToggle, comparedListings }) => {
+// 🚨 FIX: 'listings' prop을 받도록 수정
+const MapSection = ({ listings, facilityToggles, onFacilityToggle, onCompareToggle, onMarkerClick, comparedListings, isCommercialMap }) => {
   const facilities = [
     { name: 'subway', label: '🚇 지하철역' },
     { name: 'school', label: '🏫 학교' },
@@ -113,7 +114,6 @@ const MapSection = ({ listings, facilityToggles, onFacilityToggle, onCompareTogg
   window.currentComparedCount = comparedListings.length;
 
   const handleMapBoundsChange = (bounds) => {
-    // 지도 경계 변경 동기화 로직 (여기서 API 호출을 수행해야 함)
     // console.log("지도 경계 변경. 새로운 매물 검색 시작:", bounds);
   };
 
@@ -151,9 +151,11 @@ const MapSection = ({ listings, facilityToggles, onFacilityToggle, onCompareTogg
 
         {/* 네이버 지도 로더 컴포넌트 삽입 */}
         <NaverMapLoader 
-          listings={listings} 
+          listings={listings} // 🚨 FIX: 'listings' prop을 NaverMapLoader로 전달
           facilityToggles={facilityToggles}
           onMapBoundsChange={handleMapBoundsChange}
+          onMarkerClick={onMarkerClick} 
+          isCommercialMap={isCommercialMap} 
         />
         
       </div>
